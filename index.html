@@ -351,7 +351,7 @@
                 { question: "Which of these is NOT part of the TPP framework?", options: ["A. Trust", "B. Privacy", "C. Performance", "D. Product fit"], correctAnswer: "B" },
                 { question: "Which is a source of Al bias?", options: ["A. Data bias", "B. Random chance", "C. Weather changes", "D. Internet speed"], correctAnswer: "A" },
                 { question: "Most at risk of Al replacement in the Performance Hexagon?", options: ["A. System thinkers", "B. Problem solvers", "C. Task robots", "D. Superstars"], correctAnswer: "C" },
-                { question: "Three keys to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
+                { question: "Three essentials to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
                 { question: "Prompting rule: always define:", options: ["A. What, Why, How", "B. Who, How, Why", "C. When, How, Why", "D. Who, Where, How"], correctAnswer: "A" },
                 { question: "Giving examples before the task is:", options: ["A. Chain-of-thought", "B. Zero-shot prompting", "C. Few-shot prompting", "D. Iterative prompting"], correctAnswer: "C" },
                 { question: "Role-based prompting means:", options: ["A. Letting Al choose tasks", "B. Assigning Al a specific role", "C. Giving no instructions", "D. Asking many tasks at once"], correctAnswer: "B" },
@@ -499,7 +499,8 @@
                 jump() {
                     if (!this.isJumping && !this.isCrouching) {
                         this.isJumping = true;
-                        this.velocityY = -9.0;
+                        // MODIFICATION: Increased jump velocity for more vertical trajectory
+                        this.velocityY = -9.5;
                         playTone(440, 0.1, 0.1, 'square');
                     }
                 }
@@ -923,7 +924,6 @@
                 }
             }
             
-            // MODIFICATION: Rewrote touch logic for better responsiveness
             function handleTouchStart(e) {
                 e.preventDefault();
                 if (gameState !== 'playing') return;
@@ -947,11 +947,12 @@
                 if (Math.abs(deltaY) > Math.abs(deltaX)) { // Vertical swipe
                     if (deltaY < -30) { // Swipe up
                         player.jump();
+                        clearTimeout(holdTimeout);
                     } else if (deltaY > 30) { // Swipe down
                         player.crouch();
+                        clearTimeout(holdTimeout);
                     }
                 }
-                // Reset start points to avoid continuous actions
                 touchStartX = 0;
                 touchStartY = 0;
             }
@@ -960,13 +961,14 @@
                  e.preventDefault();
                  if (gameState !== 'playing') return;
                  clearTimeout(holdTimeout);
+                 
+                 const touchEndY = e.changedTouches[0].clientY;
+                 const deltaY = touchEndY - touchStartY;
+
                  if (player.isCrouching) {
                      player.standUp();
-                 } else {
-                    // This condition treats a quick touch (not a swipe or hold) as a tap to jump.
-                    if (touchStartX !== 0) {
-                        player.jump();
-                    }
+                 } else if (Math.abs(deltaY) < 10) { // It's a tap, not a swipe
+                    player.jump();
                  }
                  touchStartX = 0;
                  touchStartY = 0;
