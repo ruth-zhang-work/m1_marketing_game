@@ -63,7 +63,6 @@
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         
-        /* MODIFICATION: Adjusted quiz modal for better vertical centering */
         #quizModal {
             justify-content: center;
             padding-top: 0;
@@ -194,13 +193,22 @@
                 font-size: 0.9rem;
                 padding: 8px 12px;
             }
-            /* MODIFICATION: Adjusted quiz question for better spacing */
             #quizQuestion {
                 font-size: 1.2rem;
                 margin-bottom: 1.5rem;
             }
             .button-quiz {
                 font-size: 0.9rem;
+            }
+            /* MODIFICATION: Hide keyboard instructions on touch devices */
+            .kbd-instructions {
+                display: none;
+            }
+        }
+        @media (min-width: 769px) {
+            /* MODIFICATION: Hide touch instructions on non-touch devices */
+            .touch-instructions {
+                display: none;
             }
         }
         @media (max-width: 480px) {
@@ -223,9 +231,6 @@
              .button-quiz {
                 padding: 10px 12px;
             }
-             .kbd-instructions {
-                 display: none; /* Hide keyboard instructions on mobile */
-             }
         }
     </style>
 </head>
@@ -238,7 +243,9 @@
             <h1 class="text-6xl font-bold mb-4 text-white" style="font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px #6366F1;">Quiz Dash</h1>
             <p class="text-xl mb-8 text-gray-300">Reinforce your AI knowledge in a futuristic city run.</p>
             <button id="startButton" class="button button-primary">Start Game</button>
+            <!-- MODIFICATION: Updated instructions for both keyboard and touch -->
             <p class="kbd-instructions mt-6 text-gray-400 text-sm">Use <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">SPACE</kbd> or <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↑</kbd> to jump and <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↓</kbd> to slide</p>
+            <p class="touch-instructions mt-6 text-gray-400 text-sm"><b>Tap</b> or <b>Swipe Up</b> to jump<br><b>Swipe Down</b> or <b>Hold</b> to slide</p>
         </div>
 
         <div id="gameOverScreen" class="overlay hidden">
@@ -313,6 +320,10 @@
             let correctQuizzes = 0;
             const maxQuizzes = 10;
             let backgroundLayers = [];
+            // MODIFICATION: Added variables for touch controls
+            let touchStartY = 0;
+            let holdTimeout = null;
+
 
             // --- Audio ---
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -913,18 +924,43 @@
                     if(gameState === 'playing') player.standUp();
                 }
             }
+            
+            // MODIFICATION: Updated touch handling logic
             function handleTouchStart(e) {
                 e.preventDefault();
-                if (gameState === 'playing') {
-                    const touchY = e.touches[0].clientY;
-                    const canvasRect = canvas.getBoundingClientRect();
-                    if (touchY < canvasRect.top + canvasRect.height / 2) player.jump();
-                    else player.crouch();
-                }
+                if (gameState !== 'playing') return;
+
+                touchStartY = e.touches[0].clientY;
+                
+                holdTimeout = setTimeout(() => {
+                    if (gameState === 'playing') player.crouch();
+                    holdTimeout = null; 
+                }, 150); 
             }
+
             function handleTouchEnd(e) {
                  e.preventDefault();
-                 if (gameState === 'playing') player.standUp();
+                 if (gameState !== 'playing') return;
+
+                if (player.isCrouching) {
+                    player.standUp();
+                    clearTimeout(holdTimeout);
+                    return;
+                }
+
+                clearTimeout(holdTimeout);
+
+                const touchEndY = e.changedTouches[0].clientY;
+                const deltaY = touchEndY - touchStartY;
+
+                if (deltaY < -40) { // Swipe Up
+                    player.jump();
+                } else if (deltaY > 40) { // Swipe Down
+                    player.crouch();
+                    setTimeout(() => player.standUp(), 400); 
+                } else { // Tap
+                    player.jump();
+                }
             }
 
             // --- Game Loop ---
