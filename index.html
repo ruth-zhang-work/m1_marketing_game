@@ -320,6 +320,7 @@
             let touchStartY = 0;
             let touchStartX = 0;
             let holdTimeout = null;
+            let touchMoved = false;
 
 
             // --- Audio ---
@@ -351,7 +352,7 @@
                 { question: "Which of these is NOT part of the TPP framework?", options: ["A. Trust", "B. Privacy", "C. Performance", "D. Product fit"], correctAnswer: "B" },
                 { question: "Which is a source of Al bias?", options: ["A. Data bias", "B. Random chance", "C. Weather changes", "D. Internet speed"], correctAnswer: "A" },
                 { question: "Most at risk of Al replacement in the Performance Hexagon?", options: ["A. System thinkers", "B. Problem solvers", "C. Task robots", "D. Superstars"], correctAnswer: "C" },
-                { question: "Three essentials to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
+                { question: "Three keys to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
                 { question: "Prompting rule: always define:", options: ["A. What, Why, How", "B. Who, How, Why", "C. When, How, Why", "D. Who, Where, How"], correctAnswer: "A" },
                 { question: "Giving examples before the task is:", options: ["A. Chain-of-thought", "B. Zero-shot prompting", "C. Few-shot prompting", "D. Iterative prompting"], correctAnswer: "C" },
                 { question: "Role-based prompting means:", options: ["A. Letting Al choose tasks", "B. Assigning Al a specific role", "C. Giving no instructions", "D. Asking many tasks at once"], correctAnswer: "B" },
@@ -499,8 +500,8 @@
                 jump() {
                     if (!this.isJumping && !this.isCrouching) {
                         this.isJumping = true;
-                        // MODIFICATION: Increased jump velocity for more vertical trajectory
-                        this.velocityY = -9.5;
+                        // MODIFICATION: Increased jump velocity for a higher jump
+                        this.velocityY = -10.0;
                         playTone(440, 0.1, 0.1, 'square');
                     }
                 }
@@ -929,32 +930,29 @@
                 if (gameState !== 'playing') return;
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
+                touchMoved = false;
+
                 holdTimeout = setTimeout(() => {
-                    if (gameState === 'playing') player.crouch();
+                    if (!touchMoved) {
+                        player.crouch();
+                    }
                     holdTimeout = null;
                 }, 200);
             }
 
             function handleTouchMove(e) {
-                if (!touchStartX || !touchStartY) {
-                    return;
-                }
+                e.preventDefault();
+                if (gameState !== 'playing' || !touchStartX) return;
+
                 let touchEndX = e.touches[0].clientX;
                 let touchEndY = e.touches[0].clientY;
                 let deltaX = touchEndX - touchStartX;
                 let deltaY = touchEndY - touchStartY;
 
-                if (Math.abs(deltaY) > Math.abs(deltaX)) { // Vertical swipe
-                    if (deltaY < -30) { // Swipe up
-                        player.jump();
-                        clearTimeout(holdTimeout);
-                    } else if (deltaY > 30) { // Swipe down
-                        player.crouch();
-                        clearTimeout(holdTimeout);
-                    }
+                if (Math.abs(deltaY) > 10 || Math.abs(deltaX) > 10) {
+                    touchMoved = true;
+                    clearTimeout(holdTimeout);
                 }
-                touchStartX = 0;
-                touchStartY = 0;
             }
 
             function handleTouchEnd(e) {
@@ -962,14 +960,24 @@
                  if (gameState !== 'playing') return;
                  clearTimeout(holdTimeout);
                  
-                 const touchEndY = e.changedTouches[0].clientY;
-                 const deltaY = touchEndY - touchStartY;
+                 let touchEndY = e.changedTouches[0].clientY;
+                 let deltaY = touchEndY - touchStartY;
 
                  if (player.isCrouching) {
                      player.standUp();
-                 } else if (Math.abs(deltaY) < 10) { // It's a tap, not a swipe
+                 } else if (!touchMoved) {
                     player.jump();
+                 } else {
+                    if (deltaY < -40) {
+                        player.jump();
+                    } else if (deltaY > 40) {
+                        player.crouch();
+                        setTimeout(() => {
+                            if (player.isCrouching) player.standUp();
+                        }, 400);
+                    }
                  }
+                 
                  touchStartX = 0;
                  touchStartY = 0;
             }
