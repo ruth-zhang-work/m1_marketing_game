@@ -63,9 +63,10 @@
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         
+        /* MODIFICATION: Adjusted quiz modal for better vertical spacing */
         #quizModal {
-            justify-content: flex-start;
-            padding-top: 60px;
+            justify-content: center;
+            padding-top: 80px;
         }
 
         .hud {
@@ -194,6 +195,7 @@
             }
             #quizQuestion {
                 font-size: 1.2rem;
+                margin-top: 2rem; /* Added margin for spacing */
             }
             .button-quiz {
                 font-size: 0.9rem;
@@ -298,9 +300,10 @@
             let player;
             let obstacles = [];
             let particles = [];
-            let gameSpeed = 8.5;
-            const initialGameSpeed = 8.5;
-            const maxGameSpeed = 18.5;
+            // MODIFICATION: Reduced avatar speed
+            let gameSpeed = 7.8;
+            const initialGameSpeed = 7.8;
+            const maxGameSpeed = 17.5;
             let obstacleInterval = 2000; 
             let lastObstacleTime = 0;
             let questionPool = [];
@@ -328,7 +331,6 @@
             }
 
             // --- Quiz Data ---
-            // MODIFICATION: Removed specified questions.
             const allQuizQuestions = [
                 { question: "What does the \"G\" in GPT mean?", options: ["A. Graph", "B. Generative", "C. Global", "D. General"], correctAnswer: "B" },
                 { question: "Which Al type uses neural networks to mimic the brain?", options: ["A. Machine Learning", "B. Generative Al", "C. Transformers", "D. Deep Learning"], correctAnswer: "D" },
@@ -340,7 +342,7 @@
                 { question: "Which of these is NOT part of the TPP framework?", options: ["A. Trust", "B. Privacy", "C. Performance", "D. Product fit"], correctAnswer: "B" },
                 { question: "Which is a source of Al bias?", options: ["A. Data bias", "B. Random chance", "C. Weather changes", "D. Internet speed"], correctAnswer: "A" },
                 { question: "Most at risk of Al replacement in the Performance Hexagon?", options: ["A. System thinkers", "B. Problem solvers", "C. Task robots", "D. Superstars"], correctAnswer: "C" },
-                { question: "Three essentials to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
+                { question: "Three keys to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
                 { question: "Prompting rule: always define:", options: ["A. What, Why, How", "B. Who, How, Why", "C. When, How, Why", "D. Who, Where, How"], correctAnswer: "A" },
                 { question: "Giving examples before the task is:", options: ["A. Chain-of-thought", "B. Zero-shot prompting", "C. Few-shot prompting", "D. Iterative prompting"], correctAnswer: "C" },
                 { question: "Role-based prompting means:", options: ["A. Letting Al choose tasks", "B. Assigning Al a specific role", "C. Giving no instructions", "D. Asking many tasks at once"], correctAnswer: "B" },
@@ -375,7 +377,9 @@
             class Player {
                 constructor() {
                     this.width = 50; this.height = 70; this.initialHeight = this.height;
-                    this.x = 80; this.groundY = canvas.height - 70;
+                    this.x = 80; 
+                    // MODIFICATION: Raised the ground level for better visibility on mobile
+                    this.groundY = canvas.height - 100;
                     this.y = this.groundY - this.height; this.velocityY = 0;
                     this.gravity = 0.35; 
                     this.isJumping = false; this.isCrouching = false;
@@ -730,7 +734,7 @@
                 canvas.width = container.clientWidth;
                 canvas.height = container.clientHeight;
                 if(player) {
-                    player.groundY = canvas.height - 70;
+                    player.groundY = canvas.height - 100;
                 }
                 if (gameState !== 'playing') {
                      backgroundLayers = [
@@ -836,9 +840,13 @@
                     }
                 }
 
+                // MODIFICATION: Check if it's the last question to trigger game end.
                 if (totalQuizzes >= maxQuizzes) {
                     quizFeedback.textContent += " All questions answered!";
-                    setTimeout(() => endGame(true), 2000); 
+                    setTimeout(() => {
+                        quizModal.classList.add('hidden');
+                        endGame(true);
+                    }, 2000); 
                 } else {
                     quizFeedback.textContent += ' Resuming...';
                     setTimeout(() => {
@@ -854,7 +862,6 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
                 
-                // MODIFICATION: Hide the quiz modal when the game ends.
                 quizModal.classList.add('hidden');
 
                 if (isWin) {
