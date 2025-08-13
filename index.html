@@ -63,10 +63,11 @@
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
         
-        /* MODIFICATION: Adjusted quiz modal for better vertical spacing */
+        /* MODIFICATION: Adjusted quiz modal for better vertical centering */
         #quizModal {
             justify-content: center;
-            padding-top: 80px;
+            padding-top: 0;
+            padding-bottom: 2rem;
         }
 
         .hud {
@@ -193,9 +194,10 @@
                 font-size: 0.9rem;
                 padding: 8px 12px;
             }
+            /* MODIFICATION: Adjusted quiz question for better spacing */
             #quizQuestion {
                 font-size: 1.2rem;
-                margin-top: 2rem; /* Added margin for spacing */
+                margin-bottom: 1.5rem;
             }
             .button-quiz {
                 font-size: 0.9rem;
@@ -300,7 +302,6 @@
             let player;
             let obstacles = [];
             let particles = [];
-            // MODIFICATION: Reduced avatar speed
             let gameSpeed = 7.8;
             const initialGameSpeed = 7.8;
             const maxGameSpeed = 17.5;
@@ -378,7 +379,6 @@
                 constructor() {
                     this.width = 50; this.height = 70; this.initialHeight = this.height;
                     this.x = 80; 
-                    // MODIFICATION: Raised the ground level for better visibility on mobile
                     this.groundY = canvas.height - 100;
                     this.y = this.groundY - this.height; this.velocityY = 0;
                     this.gravity = 0.35; 
@@ -840,7 +840,6 @@
                     }
                 }
 
-                // MODIFICATION: Check if it's the last question to trigger game end.
                 if (totalQuizzes >= maxQuizzes) {
                     quizFeedback.textContent += " All questions answered!";
                     setTimeout(() => {
