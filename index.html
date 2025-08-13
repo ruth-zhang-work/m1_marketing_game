@@ -200,13 +200,11 @@
             .button-quiz {
                 font-size: 0.9rem;
             }
-            /* MODIFICATION: Hide keyboard instructions on touch devices */
             .kbd-instructions {
                 display: none;
             }
         }
         @media (min-width: 769px) {
-            /* MODIFICATION: Hide touch instructions on non-touch devices */
             .touch-instructions {
                 display: none;
             }
@@ -243,7 +241,6 @@
             <h1 class="text-6xl font-bold mb-4 text-white" style="font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px #6366F1;">Quiz Dash</h1>
             <p class="text-xl mb-8 text-gray-300">Reinforce your AI knowledge in a futuristic city run.</p>
             <button id="startButton" class="button button-primary">Start Game</button>
-            <!-- MODIFICATION: Updated instructions for both keyboard and touch -->
             <p class="kbd-instructions mt-6 text-gray-400 text-sm">Use <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">SPACE</kbd> or <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↑</kbd> to jump and <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↓</kbd> to slide</p>
             <p class="touch-instructions mt-6 text-gray-400 text-sm"><b>Tap</b> or <b>Swipe Up</b> to jump<br><b>Swipe Down</b> or <b>Hold</b> to slide</p>
         </div>
@@ -320,8 +317,8 @@
             let correctQuizzes = 0;
             const maxQuizzes = 10;
             let backgroundLayers = [];
-            // MODIFICATION: Added variables for touch controls
             let touchStartY = 0;
+            let touchStartX = 0;
             let holdTimeout = null;
 
 
@@ -734,6 +731,7 @@
                 document.addEventListener('keyup', handleKeyUp);
                 canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
                 canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+                canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
                 startButton.addEventListener('click', startGame);
                 playAgainButton.addEventListener('click', startGame);
                 
@@ -925,42 +923,53 @@
                 }
             }
             
-            // MODIFICATION: Updated touch handling logic
+            // MODIFICATION: Rewrote touch logic for better responsiveness
             function handleTouchStart(e) {
                 e.preventDefault();
                 if (gameState !== 'playing') return;
-
+                touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
-                
                 holdTimeout = setTimeout(() => {
                     if (gameState === 'playing') player.crouch();
-                    holdTimeout = null; 
-                }, 150); 
+                    holdTimeout = null;
+                }, 200);
+            }
+
+            function handleTouchMove(e) {
+                if (!touchStartX || !touchStartY) {
+                    return;
+                }
+                let touchEndX = e.touches[0].clientX;
+                let touchEndY = e.touches[0].clientY;
+                let deltaX = touchEndX - touchStartX;
+                let deltaY = touchEndY - touchStartY;
+
+                if (Math.abs(deltaY) > Math.abs(deltaX)) { // Vertical swipe
+                    if (deltaY < -30) { // Swipe up
+                        player.jump();
+                    } else if (deltaY > 30) { // Swipe down
+                        player.crouch();
+                    }
+                }
+                // Reset start points to avoid continuous actions
+                touchStartX = 0;
+                touchStartY = 0;
             }
 
             function handleTouchEnd(e) {
                  e.preventDefault();
                  if (gameState !== 'playing') return;
-
-                if (player.isCrouching) {
-                    player.standUp();
-                    clearTimeout(holdTimeout);
-                    return;
-                }
-
-                clearTimeout(holdTimeout);
-
-                const touchEndY = e.changedTouches[0].clientY;
-                const deltaY = touchEndY - touchStartY;
-
-                if (deltaY < -40) { // Swipe Up
-                    player.jump();
-                } else if (deltaY > 40) { // Swipe Down
-                    player.crouch();
-                    setTimeout(() => player.standUp(), 400); 
-                } else { // Tap
-                    player.jump();
-                }
+                 clearTimeout(holdTimeout);
+                 if (player.isCrouching) {
+                     player.standUp();
+                 } else {
+                    // This condition treats a quick touch (not a swipe or hold) as a tap to jump.
+                    if (touchStartX !== 0) {
+                        player.jump();
+                    }
+                 }
+                 touchStartX = 0;
+                 touchStartY = 0;
             }
 
             // --- Game Loop ---
