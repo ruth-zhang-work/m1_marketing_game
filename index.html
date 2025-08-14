@@ -23,7 +23,8 @@
             position: relative;
             width: 100%;
             max-width: 800px;
-            height: 90vh;
+            /* MODIFICATION: Made height more flexible to fit different screen sizes */
+            height: 100vh; 
             max-height: 500px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
@@ -182,7 +183,6 @@
         .fade-out { opacity: 0; visibility: hidden; }
         .hidden { display: none; }
 
-        /* MODIFICATION: Added screen rotation prompt */
         #rotate-device-message {
             display: none;
             position: fixed;
@@ -260,7 +260,6 @@
     </style>
 </head>
 <body>
-    <!-- MODIFICATION: Added rotation message div -->
     <div id="rotate-device-message">
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-phone-landscape" viewBox="0 0 16 16">
             <path d="M1 4.5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-6zM2 4a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5H2z"/>
