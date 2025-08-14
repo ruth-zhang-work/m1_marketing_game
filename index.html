@@ -29,7 +29,6 @@
 
         .game-container {
             position: relative;
-            /* MODIFICATION: Let JavaScript control the size to maintain aspect ratio */
             box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
             background-color: #1e1e1e;
             display: flex;
@@ -65,9 +64,8 @@
         }
         
         #quizModal {
-            justify-content: center;
-            padding-top: 0;
-            padding-bottom: 2rem;
+            justify-content: flex-start;
+            padding-top: 6rem; 
         }
 
         .hud {
@@ -173,8 +171,6 @@
         .quiz-feedback {
             font-size: 1.8rem;
             font-weight: bold;
-            margin-top: 20px;
-            font-family: 'Orbitron', sans-serif;
         }
 
         .correct { color: #10B981; text-shadow: 0 0 10px #10B981; }
@@ -199,7 +195,8 @@
             z-index: 100;
         }
 
-        @media screen and (orientation: portrait) {
+        /* MODIFICATION: Only show rotate message on touch devices in portrait mode */
+        @media (orientation: portrait) and (pointer: coarse) {
             .game-wrapper {
                 display: none;
             }
@@ -269,10 +266,9 @@
             </div>
 
             <div id="quizModal" class="overlay hidden">
-                <h2 id="quizQuestion" class="font-bold mb-6 max-w-2xl"></h2>
-                <div id="quizOptions" class="w-full max-w-2xl flex flex-col items-start">
-                </div>
-                <div id="quizFeedback" class="quiz-feedback"></div>
+                <h2 id="quizQuestion" class="font-bold mb-8 max-w-2xl"></h2>
+                <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                <div id="quizFeedback" class="quiz-feedback mt-8"></div>
             </div>
 
             <div id="hud" class="hud hidden">
@@ -367,7 +363,7 @@
                 { question: "Which is a source of Al bias?", options: ["A. Data bias", "B. Random chance", "C. Weather changes", "D. Internet speed"], correctAnswer: "A" },
                 { question: "Most at risk of Al replacement in the Performance Hexagon?", options: ["A. System thinkers", "B. Problem solvers", "C. Task robots", "D. Superstars"], correctAnswer: "C" },
                 { question: "Three essentials to being \"supercharged\":", options: ["A. Technical skill, Al fluency, leadership", "B. Al fluency, future-proof skills, domain expertise", "C. Networking, teamwork, Al fluency", "D. Creativity, coding, management"], correctAnswer: "B" },
-                { question: "Prompting rule: always define:", options: ["A. What, Why, How", "B. Who, How, Why", "C. When, How, Why", "D. Who, Where, How"], correctAnswer: "A" },
+                { question: "When prompting, always define:", options: ["A. What, Why, How", "B. Who, How, Why", "C. When, How, Why", "D. Who, Where, How"], correctAnswer: "A" },
                 { question: "Giving examples before the task is:", options: ["A. Chain-of-thought", "B. Zero-shot prompting", "C. Few-shot prompting", "D. Iterative prompting"], correctAnswer: "C" },
                 { question: "Role-based prompting means:", options: ["A. Letting Al choose tasks", "B. Assigning Al a specific role", "C. Giving no instructions", "D. Asking many tasks at once"], correctAnswer: "B" },
                 { question: "Credit scoring Al is what EU AI Act category?", options: ["A. Minimal risk", "B. Unacceptable risk", "C. Limited risk", "D. High risk"], correctAnswer: "D" },
@@ -770,7 +766,7 @@
 
                 container.style.width = `${newWidth}px`;
                 container.style.height = `${newHeight}px`;
-                container.style.borderRadius = '20px';
+                container.style.borderRadius = '0px';
 
                 canvas.width = newWidth;
                 canvas.height = newHeight;
