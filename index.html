@@ -65,7 +65,7 @@
         
         #quizModal {
             justify-content: flex-start;
-            padding-top: 6rem; 
+            padding-top: 4rem; 
         }
 
         .hud {
@@ -195,7 +195,6 @@
             z-index: 100;
         }
 
-        /* MODIFICATION: Only show rotate message on touch devices in portrait mode */
         @media (orientation: portrait) and (pointer: coarse) {
             .game-wrapper {
                 display: none;
@@ -266,9 +265,9 @@
             </div>
 
             <div id="quizModal" class="overlay hidden">
-                <h2 id="quizQuestion" class="font-bold mb-8 max-w-2xl"></h2>
+                <h2 id="quizQuestion" class="font-bold mb-4 max-w-2xl"></h2>
                 <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-                <div id="quizFeedback" class="quiz-feedback mt-8"></div>
+                <div id="quizFeedback" class="quiz-feedback mt-4"></div>
             </div>
 
             <div id="hud" class="hud hidden">
