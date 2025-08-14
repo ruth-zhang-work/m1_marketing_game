@@ -9,28 +9,18 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #000; /* Black background for letterboxing */
+            background-color: #0c0c14; 
             color: #E0E0E0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
             overflow: hidden;
         }
 
-        .game-wrapper {
+        .game-container {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .game-container {
-            position: relative;
-            box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
-            background-color: #1e1e1e;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -65,7 +55,7 @@
         
         #quizModal {
             justify-content: flex-start;
-            padding-top: 4rem; 
+            padding-top: 5rem; 
         }
 
         .hud {
@@ -196,7 +186,7 @@
         }
 
         @media (orientation: portrait) and (pointer: coarse) {
-            .game-wrapper {
+            .game-container {
                 display: none;
             }
             #rotate-device-message {
@@ -242,44 +232,42 @@
         <p class="mt-4 text-xl">Please rotate your device to landscape mode to play.</p>
     </div>
 
-    <div class="game-wrapper">
-        <div class="game-container">
-            <canvas id="gameCanvas"></canvas>
+    <div class="game-container">
+        <canvas id="gameCanvas"></canvas>
 
-            <div id="mainMenu" class="overlay">
-                <h1 class="text-6xl font-bold mb-4 text-white" style="font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px #6366F1;">Quiz Dash</h1>
-                <p class="text-xl mb-8 text-gray-300">Reinforce your AI knowledge in a futuristic city run.</p>
-                <button id="startButton" class="button button-primary">Start Game</button>
-                <p class="kbd-instructions mt-6 text-gray-400 text-sm">Use <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">SPACE</kbd> or <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↑</kbd> to jump and <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↓</kbd> to slide</p>
-                <p class="touch-instructions mt-6 text-gray-400 text-sm"><b>Tap</b> or <b>Swipe Up</b> to jump<br><b>Swipe Down</b> or <b>Hold</b> to slide</p>
+        <div id="mainMenu" class="overlay">
+            <h1 class="text-6xl font-bold mb-4 text-white" style="font-family: 'Orbitron', sans-serif; text-shadow: 0 0 15px #6366F1;">Quiz Dash</h1>
+            <p class="text-xl mb-8 text-gray-300">Reinforce your AI knowledge in a futuristic city run.</p>
+            <button id="startButton" class="button button-primary">Start Game</button>
+            <p class="kbd-instructions mt-6 text-gray-400 text-sm">Use <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">SPACE</kbd> or <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↑</kbd> to jump and <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">↓</kbd> to slide</p>
+            <p class="touch-instructions mt-6 text-gray-400 text-sm"><b>Tap</b> or <b>Swipe Up</b> to jump<br><b>Swipe Down</b> or <b>Hold</b> to slide</p>
+        </div>
+
+        <div id="gameOverScreen" class="overlay hidden">
+            <h1 id="gameOverTitle" class="text-5xl font-bold mb-4" style="font-family: 'Orbitron', sans-serif;">Game Over!</h1>
+            <div class="text-xl mb-8 text-gray-400 space-y-2">
+                <p>Final Score: <span id="finalScore" class="font-bold text-white text-2xl">0</span></p>
+                <p>Correct Answers: <span id="finalCorrect" class="font-bold text-white text-2xl">0</span> / 10</p>
+                <p>High Score: <span id="highScoreDisplay" class="font-bold text-yellow-400 text-2xl">0</span></p>
             </div>
+            <button id="playAgainButton" class="button button-primary">Play Again</button>
+        </div>
 
-            <div id="gameOverScreen" class="overlay hidden">
-                <h1 id="gameOverTitle" class="text-5xl font-bold mb-4" style="font-family: 'Orbitron', sans-serif;">Game Over!</h1>
-                <div class="text-xl mb-8 text-gray-400 space-y-2">
-                    <p>Final Score: <span id="finalScore" class="font-bold text-white text-2xl">0</span></p>
-                    <p>Correct Answers: <span id="finalCorrect" class="font-bold text-white text-2xl">0</span> / 10</p>
-                    <p>High Score: <span id="highScoreDisplay" class="font-bold text-yellow-400 text-2xl">0</span></p>
-                </div>
-                <button id="playAgainButton" class="button button-primary">Play Again</button>
+        <div id="quizModal" class="overlay hidden">
+            <h2 id="quizQuestion" class="font-bold mb-4 max-w-2xl"></h2>
+            <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+            <div id="quizFeedback" class="quiz-feedback mt-4"></div>
+        </div>
+
+        <div id="hud" class="hud hidden">
+            <div class="hud-left">
+                <span id="livesDisplay"></span>
             </div>
-
-            <div id="quizModal" class="overlay hidden">
-                <h2 id="quizQuestion" class="font-bold mb-4 max-w-2xl"></h2>
-                <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-                <div id="quizFeedback" class="quiz-feedback mt-4"></div>
+            <div class="hud-center">
+                <span>Questions: <span id="questionsAnsweredDisplay">0</span>/10</span>
             </div>
-
-            <div id="hud" class="hud hidden">
-                <div class="hud-left">
-                    <span id="livesDisplay"></span>
-                </div>
-                <div class="hud-center">
-                    <span>Questions: <span id="questionsAnsweredDisplay">0</span>/10</span>
-                </div>
-                <div class="hud-right">
-                    <span>Score: <span id="scoreDisplay" class="font-bold">0</span></span>
-                </div>
+            <div class="hud-right">
+                <span>Score: <span id="scoreDisplay" class="font-bold">0</span></span>
             </div>
         </div>
     </div>
