@@ -21,11 +21,12 @@
 
         .game-container {
             position: relative;
-            width: 100%;
+            /* MODIFICATION: Made sizing more flexible to fit any screen */
+            width: 95vw;
             max-width: 800px;
-            /* MODIFICATION: Made height more flexible to fit different screen sizes */
-            height: 100vh; 
-            max-height: 500px;
+            aspect-ratio: 16 / 9;
+            height: auto;
+            max-height: 95vh;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(79, 70, 229, 0.5);
             background-color: #1e1e1e;
