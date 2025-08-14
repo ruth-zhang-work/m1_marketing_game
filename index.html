@@ -182,6 +182,32 @@
         .fade-out { opacity: 0; visibility: hidden; }
         .hidden { display: none; }
 
+        /* MODIFICATION: Added screen rotation prompt */
+        #rotate-device-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0c0c14;
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            .game-container {
+                display: none;
+            }
+            #rotate-device-message {
+                display: flex;
+            }
+        }
+
         @media (max-width: 768px) {
             #mainMenu h1, #gameOverScreen h1 {
                 font-size: 2.5rem;
@@ -210,10 +236,9 @@
             }
         }
         @media (max-width: 480px) {
-            /* MODIFICATION: Changed phone UI to be horizontal */
             .game-container {
-                width: 100%;
-                height: 56.25vw; /* Force a 16:9 aspect ratio */
+                width: 100vw;
+                height: 100vh;
                 max-height: 100vh;
                 border-radius: 0;
                 border: none;
@@ -235,6 +260,14 @@
     </style>
 </head>
 <body>
+    <!-- MODIFICATION: Added rotation message div -->
+    <div id="rotate-device-message">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-phone-landscape" viewBox="0 0 16 16">
+            <path d="M1 4.5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-6zM2 4a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5H2z"/>
+            <path d="M14 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0z"/>
+        </svg>
+        <p class="mt-4 text-xl">Please rotate your device to landscape mode to play.</p>
+    </div>
 
     <div class="game-container">
         <canvas id="gameCanvas"></canvas>
