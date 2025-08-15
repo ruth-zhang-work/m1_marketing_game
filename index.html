@@ -132,6 +132,32 @@
             box-shadow: 0 8px 15px rgba(79, 70, 229, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
+        .button-secondary {
+            background: linear-gradient(145deg, #8B5CF6, #6D28D9);
+            color: white;
+            border: 2px solid #A78BFA;
+            text-shadow: 0 0 8px white;
+            animation: pulse-glow 2s infinite;
+        }
+
+        .button-secondary:hover {
+            background: linear-gradient(145deg, #A78BFA, #8B5CF6);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(167, 139, 250, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(167, 139, 250, 0.8);
+            }
+        }
+
+
         .button-quiz {
             background-color: rgba(30, 30, 30, 0.8);
             color: #E0E0E0;
@@ -266,7 +292,10 @@
                     <p>Correct Answers: <span id="finalCorrect" class="font-bold text-white text-2xl">0</span> / 10</p>
                     <p>High Score: <span id="highScoreDisplay" class="font-bold text-yellow-400 text-2xl">0</span></p>
                 </div>
-                <button id="playAgainButton" class="button button-primary">Play Again</button>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button id="playAgainButton" class="button button-primary">Play Again</button>
+                    <a href="https://courses.cfte.education/supercharged/" target="_blank" class="button button-secondary">Supercharge Me</a>
+                </div>
             </div>
 
             <div id="quizModal" class="overlay hidden">
