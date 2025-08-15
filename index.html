@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0c0c14; 
+            background-color: #000; /* Black background for letterboxing */
             color: #E0E0E0;
             display: flex;
             justify-content: center;
@@ -53,6 +53,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
             background: rgba(12, 12, 20, 0.8);
             backdrop-filter: blur(8px);
@@ -63,8 +64,7 @@
         }
         
         #quizModal {
-            justify-content: flex-start;
-            padding-top: 5rem; 
+            justify-content: center;
         }
 
         .hud {
@@ -231,7 +231,7 @@
         
         @media (pointer: coarse) {
             .game-wrapper {
-                align-items: flex-start;
+                align-items: center;
             }
         }
 
@@ -270,7 +270,7 @@
             <path d="M1 4.5a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-6zM2 4a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5H2z"/>
             <path d="M14 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0z"/>
         </svg>
-        <p class="mt-4 text-xl">Please rotate your device to landscape mode to play.</p>
+        <p class="mt-4 text-xl">Please rotate your device to landscape mode to play (remember to unlock auto-rotate).</p>
     </div>
 
     <div class="game-wrapper">
@@ -294,13 +294,13 @@
                 </div>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <button id="playAgainButton" class="button button-primary">Play Again</button>
-                    <a href="https://courses.cfte.education/supercharged/" target="_blank" class="button button-secondary">Supercharge Me</a>
+                    <a href="https://courses.cfte.education/supercharged/?utm_source=game&utm_medium=referral&utm_campaign=supercharged"" target="_blank" class="button button-secondary">Supercharge Me</a>
                 </div>
             </div>
 
             <div id="quizModal" class="overlay hidden">
                 <h2 id="quizQuestion" class="font-bold mb-4 max-w-2xl"></h2>
-                <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-2 gap-3"></div>
                 <div id="quizFeedback" class="quiz-feedback mt-4"></div>
             </div>
 
