@@ -9,8 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            /* MODIFICATION: Matched body background to the game's sky color */
-            background-color: #0c0c14; 
+            background-color: #000; /* Black background for letterboxing */
             color: #E0E0E0;
             display: flex;
             justify-content: center;
@@ -65,8 +64,7 @@
         }
         
         #quizModal {
-            justify-content: flex-start;
-            padding-top: 5rem; 
+            justify-content: center;
         }
 
         .hud {
@@ -266,7 +264,8 @@
 
         <div id="quizModal" class="overlay hidden">
             <h2 id="quizQuestion" class="font-bold mb-4 max-w-2xl"></h2>
-            <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+            <!-- MODIFICATION: Changed grid layout for different screen sizes -->
+            <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-2 sm:grid-cols-1 gap-3"></div>
             <div id="quizFeedback" class="quiz-feedback mt-4"></div>
         </div>
 
