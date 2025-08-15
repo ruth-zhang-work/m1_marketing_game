@@ -196,11 +196,6 @@
         .quiz-feedback {
             font-size: 1.8rem;
             font-weight: bold;
-            /* MODIFICATION: Added min-height to prevent layout shift */
-            min-height: 3rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .correct { color: #10B981; text-shadow: 0 0 10px #10B981; }
@@ -299,13 +294,13 @@
                 </div>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                     <button id="playAgainButton" class="button button-primary">Play Again</button>
-                    <a href="https://courses.cfte.education/supercharged/?utm_source=game&utm_medium=referral&utm_campaign=supercharged" target="_blank" class="button button-secondary">Supercharge Me</a>
+                    <a href="https://courses.cfte.education/supercharged/?utm_source=game&utm_medium=referral&utm_campaign=supercharged"" target="_blank" class="button button-secondary">Supercharge Me</a>
                 </div>
             </div>
 
             <div id="quizModal" class="overlay hidden">
                 <h2 id="quizQuestion" class="font-bold mb-4 max-w-2xl"></h2>
-                <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                <div id="quizOptions" class="w-full max-w-2xl grid grid-cols-2 gap-3"></div>
                 <div id="quizFeedback" class="quiz-feedback mt-4"></div>
             </div>
 
