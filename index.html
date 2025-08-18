@@ -863,7 +863,10 @@
                 gameOverScreen.classList.add('hidden');
                 hud.classList.remove('hidden');
                 
-                gameContainer.classList.add('game-active');
+                // MODIFICATION: Force hide title on mobile during gameplay
+                if (window.innerWidth <= 768) {
+                    gameTitle.style.display = 'none';
+                }
 
                 gameState = 'playing';
                 lastTime = performance.now();
@@ -967,7 +970,10 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
                 
-                gameContainer.classList.remove('game-active');
+                // MODIFICATION: Force show title on mobile on game over screen
+                if (window.innerWidth <= 768) {
+                    gameTitle.style.display = 'block';
+                }
                 
                 quizModal.classList.add('hidden');
 
