@@ -273,10 +273,6 @@
             #gameTitle {
                 display: block; /* Show title on mobile by default */
             }
-            /* MODIFICATION: Add CSS rule to hide title when quiz is active */
-            #gameTitle.quiz-active {
-                display: none;
-            }
             #quizQuestion {
                 font-size: 1.2rem;
                 margin-bottom: 1.5rem;
@@ -865,6 +861,12 @@
                 mainMenu.classList.add('hidden');
                 gameOverScreen.classList.add('hidden');
                 hud.classList.remove('hidden');
+                
+                // MODIFICATION: Hide title on mobile when game starts
+                if (window.innerWidth <= 768) {
+                    gameTitle.style.display = 'none';
+                }
+
                 gameState = 'playing';
                 lastTime = performance.now();
                 if (!animationFrameId) {
@@ -888,7 +890,6 @@
             function triggerQuiz() {
                 gameState = 'paused';
                 hud.classList.add('quiz-active'); 
-                gameTitle.classList.add('quiz-active'); // MODIFICATION: Use class to hide title
                 
                 quizFeedback.innerHTML = '';
                 quizFeedback.className = 'quiz-feedback';
@@ -925,7 +926,6 @@
                 const resumeGame = () => {
                     quizModal.classList.add('hidden');
                     hud.classList.remove('quiz-active');
-                    gameTitle.classList.remove('quiz-active'); // MODIFICATION: Use class to show title
                     gameState = 'playing';
                     lastTime = performance.now();
                 };
@@ -933,7 +933,6 @@
                 const finishGame = (isWin) => {
                     quizModal.classList.add('hidden');
                     hud.classList.remove('quiz-active');
-                    gameTitle.classList.remove('quiz-active'); // MODIFICATION: Use class to show title
                     endGame(isWin);
                 };
 
@@ -969,6 +968,11 @@
                 gameState = 'gameover';
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
+                
+                // MODIFICATION: Show title on mobile when game ends
+                if (window.innerWidth <= 768) {
+                    gameTitle.style.display = 'block';
+                }
                 
                 quizModal.classList.add('hidden');
 
