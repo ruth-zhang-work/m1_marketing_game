@@ -67,6 +67,22 @@
             justify-content: center;
         }
 
+        #gameTitle {
+            display: none; /* Hidden by default, shown via media query */
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #f0f0f0;
+            text-shadow: 0 0 8px #4F46E5;
+            text-align: center;
+            z-index: 11;
+        }
+
         .hud {
             position: absolute;
             top: 10px;
@@ -266,6 +282,12 @@
             .touch-instructions {
                 display: none;
             }
+            #gameTitle {
+                display: block; /* Show title on desktop */
+            }
+            .hud {
+                top: 60px; /* Move HUD down to make space for title */
+            }
         }
     </style>
 </head>
@@ -280,6 +302,7 @@
 
     <div class="game-wrapper">
         <div class="game-container">
+            <div id="gameTitle">CFTE Supercharged M1 Game</div>
             <canvas id="gameCanvas"></canvas>
 
             <div id="mainMenu" class="overlay">
