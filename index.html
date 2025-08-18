@@ -273,6 +273,10 @@
             #gameTitle {
                 display: block; /* Show title on mobile by default */
             }
+            /* MODIFICATION: Hide title when game is active on mobile */
+            .game-container.game-active #gameTitle {
+                display: none;
+            }
             #quizQuestion {
                 font-size: 1.2rem;
                 margin-bottom: 1.5rem;
@@ -357,6 +361,7 @@
             // --- DOM Elements ---
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
+            const gameContainer = document.querySelector('.game-container'); // MODIFICATION
             const mainMenu = document.getElementById('mainMenu');
             const startButton = document.getElementById('startButton');
             const gameOverScreen = document.getElementById('gameOverScreen');
@@ -862,10 +867,7 @@
                 gameOverScreen.classList.add('hidden');
                 hud.classList.remove('hidden');
                 
-                // MODIFICATION: Hide title on mobile when game starts
-                if (window.innerWidth <= 768) {
-                    gameTitle.style.display = 'none';
-                }
+                gameContainer.classList.add('game-active'); // MODIFICATION
 
                 gameState = 'playing';
                 lastTime = performance.now();
@@ -969,10 +971,7 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
                 
-                // MODIFICATION: Show title on mobile when game ends
-                if (window.innerWidth <= 768) {
-                    gameTitle.style.display = 'block';
-                }
+                gameContainer.classList.remove('game-active'); // MODIFICATION
                 
                 quizModal.classList.add('hidden');
 
