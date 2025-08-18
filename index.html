@@ -267,9 +267,12 @@
                 font-size: 0.9rem;
                 padding: 8px 12px;
             }
-            /* MODIFICATION: Move HUD up when quiz is active on mobile */
             .hud.quiz-active {
                 top: 2px;
+            }
+            /* MODIFICATION: Hide title when quiz is active on mobile */
+            #gameTitle.quiz-active {
+                display: none;
             }
             #quizQuestion {
                 font-size: 1.2rem;
@@ -362,6 +365,7 @@
             const playAgainButton = document.getElementById('playAgainButton');
             const quizModal = document.getElementById('quizModal');
             const hud = document.getElementById('hud');
+            const gameTitle = document.getElementById('gameTitle'); // MODIFICATION: Get title element
             const scoreDisplay = document.getElementById('scoreDisplay');
             const livesDisplay = document.getElementById('livesDisplay');
             const finalScore = document.getElementById('finalScore');
@@ -817,7 +821,6 @@
             function resizeCanvas() {
                 const container = document.querySelector('.game-container');
                 
-                // MODIFICATION: Make game full screen on all devices to avoid letterboxing
                 container.style.width = '100vw';
                 container.style.height = '100vh';
 
@@ -881,7 +884,8 @@
             
             function triggerQuiz() {
                 gameState = 'paused';
-                hud.classList.add('quiz-active'); // MODIFICATION: Add class to shift HUD on mobile
+                hud.classList.add('quiz-active'); 
+                gameTitle.classList.add('quiz-active'); // MODIFICATION: Add class to hide title
                 quizFeedback.innerHTML = '';
                 quizFeedback.className = 'quiz-feedback';
                 if (questionPool.length === 0) {
@@ -937,14 +941,16 @@
                     quizFeedback.textContent += " All questions answered!";
                     setTimeout(() => {
                         quizModal.classList.add('hidden');
-                        hud.classList.remove('quiz-active'); // MODIFICATION: Remove class
+                        hud.classList.remove('quiz-active'); 
+                        gameTitle.classList.remove('quiz-active'); // MODIFICATION: Remove class
                         endGame(true);
                     }, 2000); 
                 } else {
                     quizFeedback.textContent += ' Resuming...';
                     setTimeout(() => {
                         quizModal.classList.add('hidden');
-                        hud.classList.remove('quiz-active'); // MODIFICATION: Remove class
+                        hud.classList.remove('quiz-active');
+                        gameTitle.classList.remove('quiz-active'); // MODIFICATION: Remove class
                         gameState = 'playing';
                         lastTime = performance.now();
                     }, 2000);
