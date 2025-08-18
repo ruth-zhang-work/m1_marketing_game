@@ -270,9 +270,11 @@
             .hud.quiz-active {
                 top: 2px;
             }
-            /* MODIFICATION: Hide title when quiz is active on mobile */
+            #gameTitle {
+                display: block; /* Show title on mobile */
+            }
             #gameTitle.quiz-active {
-                display: none;
+                display: none; /* Hide title when quiz is active on mobile */
             }
             #quizQuestion {
                 font-size: 1.2rem;
@@ -365,7 +367,7 @@
             const playAgainButton = document.getElementById('playAgainButton');
             const quizModal = document.getElementById('quizModal');
             const hud = document.getElementById('hud');
-            const gameTitle = document.getElementById('gameTitle'); // MODIFICATION: Get title element
+            const gameTitle = document.getElementById('gameTitle');
             const scoreDisplay = document.getElementById('scoreDisplay');
             const livesDisplay = document.getElementById('livesDisplay');
             const finalScore = document.getElementById('finalScore');
@@ -885,7 +887,7 @@
             function triggerQuiz() {
                 gameState = 'paused';
                 hud.classList.add('quiz-active'); 
-                gameTitle.classList.add('quiz-active'); // MODIFICATION: Add class to hide title
+                gameTitle.classList.add('quiz-active');
                 quizFeedback.innerHTML = '';
                 quizFeedback.className = 'quiz-feedback';
                 if (questionPool.length === 0) {
@@ -932,7 +934,12 @@
                     updateHUD();
                     playTone(174, 0.3, 0.2, 'sawtooth');
                     if (lives <= 0) {
-                        setTimeout(() => endGame(false), 2000);
+                        setTimeout(() => {
+                            // BUG FIX: Ensure quiz-active classes are removed before game over
+                            hud.classList.remove('quiz-active');
+                            gameTitle.classList.remove('quiz-active');
+                            endGame(false);
+                        }, 2000);
                         return;
                     }
                 }
@@ -942,7 +949,7 @@
                     setTimeout(() => {
                         quizModal.classList.add('hidden');
                         hud.classList.remove('quiz-active'); 
-                        gameTitle.classList.remove('quiz-active'); // MODIFICATION: Remove class
+                        gameTitle.classList.remove('quiz-active');
                         endGame(true);
                     }, 2000); 
                 } else {
@@ -950,7 +957,7 @@
                     setTimeout(() => {
                         quizModal.classList.add('hidden');
                         hud.classList.remove('quiz-active');
-                        gameTitle.classList.remove('quiz-active'); // MODIFICATION: Remove class
+                        gameTitle.classList.remove('quiz-active');
                         gameState = 'playing';
                         lastTime = performance.now();
                     }, 2000);
