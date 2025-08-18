@@ -271,10 +271,7 @@
                 top: 2px;
             }
             #gameTitle {
-                display: block; /* Show title on mobile */
-            }
-            #gameTitle.quiz-active {
-                display: none; /* Hide title when quiz is active on mobile */
+                display: block; /* Show title on mobile by default */
             }
             #quizQuestion {
                 font-size: 1.2rem;
@@ -887,7 +884,10 @@
             function triggerQuiz() {
                 gameState = 'paused';
                 hud.classList.add('quiz-active'); 
-                gameTitle.classList.add('quiz-active');
+                // MODIFICATION: Use direct style manipulation for mobile title
+                if (window.innerWidth <= 768) {
+                    gameTitle.style.display = 'none';
+                }
                 quizFeedback.innerHTML = '';
                 quizFeedback.className = 'quiz-feedback';
                 if (questionPool.length === 0) {
@@ -920,6 +920,22 @@
                 const buttons = quizOptions.querySelectorAll('button');
                 buttons.forEach(b => b.disabled = true);
 
+                const resumeGame = () => {
+                    quizModal.classList.add('hidden');
+                    hud.classList.remove('quiz-active');
+                    // MODIFICATION: Reset title style to let CSS control it again
+                    gameTitle.style.display = ''; 
+                    gameState = 'playing';
+                    lastTime = performance.now();
+                };
+
+                const finishGame = (isWin) => {
+                    quizModal.classList.add('hidden');
+                    hud.classList.remove('quiz-active');
+                    gameTitle.style.display = '';
+                    endGame(isWin);
+                };
+
                 if (selectedAnswer === currentQuestion.correctAnswer) {
                     correctQuizzes++;
                     quizFeedback.textContent = '✅ Correct!';
@@ -934,33 +950,17 @@
                     updateHUD();
                     playTone(174, 0.3, 0.2, 'sawtooth');
                     if (lives <= 0) {
-                        setTimeout(() => {
-                            // BUG FIX: Ensure quiz-active classes are removed before game over
-                            hud.classList.remove('quiz-active');
-                            gameTitle.classList.remove('quiz-active');
-                            endGame(false);
-                        }, 2000);
+                        setTimeout(() => finishGame(false), 2000);
                         return;
                     }
                 }
 
                 if (totalQuizzes >= maxQuizzes) {
                     quizFeedback.textContent += " All questions answered!";
-                    setTimeout(() => {
-                        quizModal.classList.add('hidden');
-                        hud.classList.remove('quiz-active'); 
-                        gameTitle.classList.remove('quiz-active');
-                        endGame(true);
-                    }, 2000); 
+                    setTimeout(() => finishGame(true), 2000); 
                 } else {
                     quizFeedback.textContent += ' Resuming...';
-                    setTimeout(() => {
-                        quizModal.classList.add('hidden');
-                        hud.classList.remove('quiz-active');
-                        gameTitle.classList.remove('quiz-active');
-                        gameState = 'playing';
-                        lastTime = performance.now();
-                    }, 2000);
+                    setTimeout(resumeGame, 2000);
                 }
             }
 
