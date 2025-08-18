@@ -104,6 +104,7 @@
             border-radius: 10px;
             border: 1px solid rgba(79, 70, 229, 0.5);
             z-index: 10;
+            transition: top 0.3s ease; /* Added transition for smooth movement */
         }
         
         .hud-left, .hud-right, .hud-center {
@@ -212,7 +213,6 @@
         .quiz-feedback {
             font-size: 1.8rem;
             font-weight: bold;
-            /* MODIFICATION: Added min-height to prevent layout shift */
             min-height: 3rem;
             display: flex;
             justify-content: center;
@@ -266,6 +266,10 @@
             .hud {
                 font-size: 0.9rem;
                 padding: 8px 12px;
+            }
+            /* MODIFICATION: Move HUD up when quiz is active on mobile */
+            .hud.quiz-active {
+                top: 2px;
             }
             #quizQuestion {
                 font-size: 1.2rem;
@@ -811,28 +815,11 @@
             }
 
             function resizeCanvas() {
-                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
                 const container = document.querySelector('.game-container');
-
-                if (isTouchDevice) {
-                    const aspectRatio = 16 / 9;
-                    let newWidth = window.innerWidth;
-                    let newHeight = window.innerHeight;
-                    const windowRatio = newWidth / newHeight;
-
-                    if (windowRatio > aspectRatio) {
-                        newHeight = window.innerHeight;
-                        newWidth = newHeight * aspectRatio;
-                    } else {
-                        newWidth = window.innerWidth;
-                        newHeight = newWidth / aspectRatio;
-                    }
-                    container.style.width = `${newWidth}px`;
-                    container.style.height = `${newHeight}px`;
-                } else {
-                    container.style.width = '100vw';
-                    container.style.height = '100vh';
-                }
+                
+                // MODIFICATION: Make game full screen on all devices to avoid letterboxing
+                container.style.width = '100vw';
+                container.style.height = '100vh';
 
                 canvas.width = container.clientWidth;
                 canvas.height = container.clientHeight;
@@ -894,6 +881,7 @@
             
             function triggerQuiz() {
                 gameState = 'paused';
+                hud.classList.add('quiz-active'); // MODIFICATION: Add class to shift HUD on mobile
                 quizFeedback.innerHTML = '';
                 quizFeedback.className = 'quiz-feedback';
                 if (questionPool.length === 0) {
@@ -949,12 +937,14 @@
                     quizFeedback.textContent += " All questions answered!";
                     setTimeout(() => {
                         quizModal.classList.add('hidden');
+                        hud.classList.remove('quiz-active'); // MODIFICATION: Remove class
                         endGame(true);
                     }, 2000); 
                 } else {
                     quizFeedback.textContent += ' Resuming...';
                     setTimeout(() => {
                         quizModal.classList.add('hidden');
+                        hud.classList.remove('quiz-active'); // MODIFICATION: Remove class
                         gameState = 'playing';
                         lastTime = performance.now();
                     }, 2000);
